@@ -1,15 +1,5 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from .models import Client
-
-
-class IsSales(BasePermission):
-
-    message = "Access not allowed ! Only sales team can access"
-
-    def has_permission(self, request, view):
-        if request.user and request.user.groups.filter(name="sales"):
-            return True
-        return False
 
 
 class IsSupport(BasePermission):
@@ -18,6 +8,16 @@ class IsSupport(BasePermission):
 
     def has_permission(self, request, view):
         if request.user and request.user.groups.filter(name="support"):
+            return True
+        return False
+
+
+class IsSales(BasePermission):
+
+    message = "Access not allowed ! Only sales team can access"
+
+    def has_permission(self, request, view):
+        if request.user and request.user.groups.filter(name="sales"):
             return True
         return False
 

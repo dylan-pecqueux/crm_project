@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "crm.apps.CrmConfig",
     "rest_framework",
     "rest_framework_simplejwt",
+    "django_filters",
     # "rest_framework_simplejwt.token_blacklist",
 ]
 
@@ -108,9 +109,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
 }
 
 SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(days=15)}
