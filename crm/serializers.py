@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Client
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,3 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "mobile",
+            "company_name",
+            "sales_contact",
+        ]
