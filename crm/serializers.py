@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Client
+from .models import User, Client, Contract
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,13 +20,18 @@ class UserSerializer(serializers.ModelSerializer):
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = [
-            "id",
-            "first_name",
-            "last_name",
-            "email",
-            "phone",
-            "mobile",
-            "company_name",
-            "sales_contact",
-        ]
+        fields = "__all__"
+
+
+class ContractSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contract
+        fields = "__all__"
+
+
+class ContractDetailSerializer(serializers.ModelSerializer):
+    client = ClientSerializer()
+
+    class Meta:
+        model = Contract
+        fields = "__all__"

@@ -1,5 +1,4 @@
 from rest_framework.permissions import BasePermission, IsAuthenticated
-from .models import Client
 
 
 class IsSupport(BasePermission):
@@ -27,5 +26,4 @@ class IsSalesContact(BasePermission):
     message = "Access not allowed ! Only the sales contact can access"
 
     def has_object_permission(self, request, view, obj):
-        is_sales_contact = Client.objects.get(email=obj.email)
-        return is_sales_contact.sales_contact == request.user
+        return obj.sales_contact == request.user
