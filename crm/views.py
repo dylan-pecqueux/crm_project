@@ -1,9 +1,6 @@
-from django.shortcuts import render
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .serializers import ClientSerializer
@@ -11,7 +8,13 @@ from .models import Client
 from .permissions import IsSales, IsSalesContact
 
 
-class ClientView(viewsets.ModelViewSet):
+class ClientView(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
 
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
