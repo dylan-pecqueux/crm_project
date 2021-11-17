@@ -33,6 +33,22 @@ class ClientView(
         return [permission() for permission in permission_classes]
 
 
+class MyClientsView(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+
+    queryset = Client.objects.all()
+    permission_classes = [IsSales]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["company_name", "email"]
+
+    def list(self, request):
+        user_clients = self.queryset.filter(sales_contact=request.user.pk)
+        serializer = ClientSerializer(user_clients, many=True)
+        return Response(serializer.data)
+
+
 class ContractView(
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
@@ -67,3 +83,19 @@ class ContractView(
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+
+class MyContractsView(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+
+    queryset = Contract.objects.all()
+    permission_classes = [IsSales]
+    filter_backends = [DjangoFilterBackend]
+    filter_class = ContractFilterSet
+
+    def list(self, request):
+        user_contracts = self.queryset.filter(sales_contact=request.user.pk)
+        serializer = ContractSerializer(user_contracts, many=True)
+        return Response(serializer.data)

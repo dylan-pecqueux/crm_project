@@ -4,12 +4,14 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import ClientView, ContractView
+from .views import ClientView, ContractView, MyContractsView, MyClientsView
 
 
 router = DefaultRouter()
 router.register(r"client", ClientView)
 router.register(r"contract", ContractView)
+router.register(r"my_contracts", MyContractsView)
+router.register(r"my_clients", MyClientsView)
 
 urlpatterns = [
     path("", include(router.urls)),
