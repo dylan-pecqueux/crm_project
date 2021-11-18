@@ -3,11 +3,17 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from .serializers import ClientSerializer, ContractSerializer, ContractDetailSerializer
-from .models import Client, Contract
-from .permissions import IsSales, IsSalesContact
-from .filters import ContractFilterSet
+from .serializers import (
+    ClientSerializer,
+    ContractSerializer,
+    ContractDetailSerializer,
+    EventSerializer,
+    EventDetailSerializer,
+    EventPatchSerializer,
+)
+from .models import Client, Contract, Event
+from .permissions import IsSales, IsSalesContact, IsSupport, IsSupportContact
+from .filters import ContractFilterSet, EventFilterSet
 
 
 class ClientView(
@@ -99,3 +105,51 @@ class MyContractsView(
         user_contracts = self.queryset.filter(sales_contact=request.user.pk)
         serializer = ContractSerializer(user_contracts, many=True)
         return Response(serializer.data)
+
+
+class EventView(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+    filter_backends = [DjangoFilterBackend]
+    filter_class = EventFilterSet
+
+    def create(self, request):
+        client_contract = get_object_or_404(Contract, id=request.data["event_status"])
+        if request.data["client"] != client_contract.client.pk:
+            return Response(
+                data="The contract client and the client need to be the same",
+                status=400,
+            )
+        serializer = EventSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        kwargs["partial"] = True
+        return super().update(request, *args, **kwargs)
+
+    def get_serializer_class(self):
+        if self.action in ["create", "list"]:
+            return EventSerializer
+        if self.action == "update":
+            return EventPatchSerializer
+        if self.action == "retrieve":
+            return EventDetailSerializer
+        return EventSerializer
+
+    def get_permissions(self):
+        if self.action == "create":
+            permission_classes = [IsSales]
+        elif self.action == "retrieve" or self.action == "update":
+            permission_classes = [IsAuthenticated, IsSupportContact]
+        elif self.action == "list":
+            permission_classes = [IsSales, IsSupport]
+        return [permission() for permission in permission_classes]

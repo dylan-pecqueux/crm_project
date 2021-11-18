@@ -11,6 +11,14 @@ class IsSupport(BasePermission):
         return False
 
 
+class IsSupportContact(BasePermission):
+
+    message = "Access not allowed ! Only support contact can access"
+
+    def has_object_permission(self, request, view, obj):
+        return obj.support_contact == request.user
+
+
 class IsSales(BasePermission):
 
     message = "Access not allowed ! Only sales team can access"

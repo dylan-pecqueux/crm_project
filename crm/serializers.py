@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Client, Contract
+from .models import User, Client, Contract, Event
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -35,3 +35,23 @@ class ContractDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = "__all__"
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = "__all__"
+
+
+class EventDetailSerializer(serializers.ModelSerializer):
+    client = ClientSerializer()
+
+    class Meta:
+        model = Event
+        fields = "__all__"
+
+
+class EventPatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ["attendees", "event_date", "notes"]

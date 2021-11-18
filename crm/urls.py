@@ -4,12 +4,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import ClientView, ContractView, MyContractsView, MyClientsView
+from .views import ClientView, ContractView, MyContractsView, MyClientsView, EventView
 
 
 router = DefaultRouter()
 router.register(r"client", ClientView)
 router.register(r"contract", ContractView)
+router.register(r"event", EventView)
 router.register(r"my_contracts", MyContractsView)
 router.register(r"my_clients", MyClientsView)
 
