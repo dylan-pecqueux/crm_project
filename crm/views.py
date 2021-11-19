@@ -151,5 +151,21 @@ class EventView(
         elif self.action == "retrieve" or self.action == "update":
             permission_classes = [IsAuthenticated, IsSupportContact]
         elif self.action == "list":
-            permission_classes = [IsSales, IsSupport]
+            permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
+
+
+class MyEventsView(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet,
+):
+
+    queryset = Event.objects.all()
+    permission_classes = [IsSupport]
+    filter_backends = [DjangoFilterBackend]
+    filter_class = EventFilterSet
+
+    def list(self, request):
+        user_contracts = self.queryset.filter(support_contact=request.user.pk)
+        serializer = EventSerializer(user_contracts, many=True)
+        return Response(serializer.data)
