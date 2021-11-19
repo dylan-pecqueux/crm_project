@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Contract
+from .models import User, Contract, Client, Event
 from .forms import UserAdminChangeForm, UserAdminCreationForm
 
 
@@ -31,3 +31,5 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Contract)
+admin.site.register(Client)
+admin.site.register(Event)
