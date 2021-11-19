@@ -5,13 +5,9 @@ from .forms import UserAdminChangeForm, UserAdminCreationForm
 
 
 class UserAdmin(BaseUserAdmin):
-    # The forms to add and change user instances
     form = UserAdminChangeForm
     add_form = UserAdminCreationForm
 
-    # The fields to be used in displaying the User model.
-    # These override the definitions on the base UserAdmin
-    # that reference specific fields on auth.User.
     list_display = ["id", "first_name", "last_name", "email", "team"]
     list_filter = ["groups"]
     fieldsets = (
@@ -19,8 +15,7 @@ class UserAdmin(BaseUserAdmin):
         ("Personal info", {"fields": ("first_name", "last_name")}),
         ("Permissions", {"fields": ("team", "groups", "is_staff")}),
     )
-    # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+
     add_fieldsets = (
         (None, {"classes": ("wide",), "fields": ("email", "password", "password_2")}),
     )
@@ -29,7 +24,19 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class ContractAdmin(admin.ModelAdmin):
+    list_display = ["id", "client", "sales_contact", "status"]
+
+
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ["id", "company_name", "sales_contact"]
+
+
+class EventAdmin(admin.ModelAdmin):
+    list_display = ["id", "event_date", "client", "support_contact"]
+
+
 admin.site.register(User, UserAdmin)
-admin.site.register(Contract)
-admin.site.register(Client)
-admin.site.register(Event)
+admin.site.register(Contract, ContractAdmin)
+admin.site.register(Client, ClientAdmin)
+admin.site.register(Event, EventAdmin)

@@ -1,5 +1,7 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.core.validators import MinValueValidator
 
 
 class UserManager(BaseUserManager):
@@ -64,6 +66,9 @@ class Client(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"({self.id}) {self.company_name}"
+
 
 class Contract(models.Model):
     client = models.ForeignKey(to=Client, on_delete=models.CASCADE)
@@ -84,3 +89,6 @@ class Event(models.Model):
     notes = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"({self.id}) {self.event_date}"
