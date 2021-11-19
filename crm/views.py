@@ -2,6 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
+from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import (
     ClientSerializer,
@@ -26,8 +27,9 @@ class ClientView(
 
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ["company_name", "email"]
+    search_fields = ["company_name", "email"]
 
     def get_permissions(self):
         if self.action == "create" or self.action == "list":
@@ -46,8 +48,9 @@ class MyClientsView(
 
     queryset = Client.objects.all()
     permission_classes = [IsSales]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ["company_name", "email"]
+    search_fields = ["company_name", "email"]
 
     def list(self, request):
         user_clients = self.queryset.filter(sales_contact=request.user.pk)
@@ -64,8 +67,9 @@ class ContractView(
 ):
 
     queryset = Contract.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_class = ContractFilterSet
+    search_fields = ["client__company_name", "client__email", "created_time", "amount"]
 
     def create(self, request):
         request.data["sales_contact"] = request.user.pk
@@ -98,8 +102,9 @@ class MyContractsView(
 
     queryset = Contract.objects.all()
     permission_classes = [IsSales]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_class = ContractFilterSet
+    search_fields = ["client__company_name", "client__email", "created_time", "amount"]
 
     def list(self, request):
         user_contracts = self.queryset.filter(sales_contact=request.user.pk)
@@ -117,8 +122,9 @@ class EventView(
 
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_class = EventFilterSet
+    search_fields = ["client__company_name", "client__email", "event_date"]
 
     def create(self, request):
         client_contract = get_object_or_404(Contract, id=request.data["event_status"])
@@ -162,8 +168,9 @@ class MyEventsView(
 
     queryset = Event.objects.all()
     permission_classes = [IsSupport]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_class = EventFilterSet
+    search_fields = ["client__company_name", "client__email", "event_date"]
 
     def list(self, request):
         user_contracts = self.queryset.filter(support_contact=request.user.pk)
