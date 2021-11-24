@@ -45,7 +45,6 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
-    team = models.CharField(max_length=50, choices=TEAM_CHOICES)
     password = models.CharField(max_length=255)
     username = None
 
