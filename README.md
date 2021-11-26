@@ -17,6 +17,7 @@ La documentation de l'api est disponible [ici](https://documenter.getpostman.com
 - Créer un fichier .env à la racine du projet et y mettre la clé généré dans une variable SECRET_KEY
 - Créer une base de données PostgreSQL
 - Dans le .env créer des variables NAME, USER, HOST, PORT et y mettre les informations relatives a la base de données créé précédemment
+- Effectuer la migration : ``python manage.py migrate``
 - Appliquer la fixture à la base de données : ``python manage.py loaddata data.json.gz``
 
 ## Démarrage
