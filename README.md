@@ -44,7 +44,8 @@ La documentation de l'api est disponible [ici](https://documenter.getpostman.com
     - username : pasmoi@support.fr
     - password : azerty
 
-* Compte utilisateur Management Team :  
+* Compte utilisateur Management Team :
+    *Le login passe par le site d'administration django, admin/*
     - username : ma@manage.fr
     - password : azerty
 
