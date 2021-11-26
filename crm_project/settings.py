@@ -126,24 +126,30 @@ SIMPLE_JWT = {"ACCESS_TOKEN_LIFETIME": timedelta(days=15)}
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "[{levelname}] {asctime} - {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": os.path.join(BASE_DIR, "debug.log"),
+            "formatter": "simple",
         },
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": "WARNING",
+        "console": {"class": "logging.StreamHandler", "formatter": "simple"},
     },
     "loggers": {
-        "django": {
+        "crm": {
             "handlers": ["file", "console"],
             "level": "DEBUG",
+            "propagate": True,
+        },
+        "django": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
             "propagate": True,
         },
     },
